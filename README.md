@@ -1,4 +1,4 @@
-# terraform-python-sample
+# terraform-aurora-sample
 
 terraform で AWS 環境上に API Gateway, Lambda(python), CloudFront, S3, Aurora Serverless(PostgreSQL14), Waf, Cognito を作ってみるサンプル
 
