@@ -91,6 +91,18 @@ run() {
   )
 }
 
+env() {
+  aws_region=`terraform_wrapper output aws_region`
+  aws_cognito_user_pool_id=`terraform_wrapper output aws_cognito_user_pool_id`
+  aws_cognito_user_pool_client_id=`terraform_wrapper output aws_cognito_user_pool_client_id`
+  aws_cognito_user_pool_domain=`terraform_wrapper output aws_cognito_user_pool_domain`
+  
+  echo "REGION=$aws_region" > back/edge/.env
+  echo "USER_POOL_ID=$aws_cognito_user_pool_id" >> back/edge/.env
+  echo "USER_POOL_APP_ID=$aws_cognito_user_pool_client_id" >> back/edge/.env
+  echo "USER_POOL_DOMAIN=$aws_cognito_user_pool_domain" >> back/edge/.env
+}
+
 main() {
   if [ "$#" = 0 ]; then
     return
@@ -98,6 +110,8 @@ main() {
     init
   elif [ "$1" = "run" ]; then
     run
+  elif [ "$1" = "env" ]; then
+    env
   elif [ "$1" = "check-format" ]; then
     terraform_wrapper fmt -check -recursive -diff
   fi

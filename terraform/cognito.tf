@@ -83,10 +83,10 @@ resource "aws_cognito_user_pool" "user_pool" {
 
 resource "aws_cognito_user_pool_client" "user_pool_client" {
   # OAuthを今回しようしないため設定しない。
-  allowed_oauth_flows                  = []
-  allowed_oauth_flows_user_pool_client = false
-  allowed_oauth_scopes                 = []
-  callback_urls                        = []
+  allowed_oauth_flows                  = ["code"]
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_scopes                 = ["email", "openid"]
+  callback_urls                        = ["https://github.com/murayama-molo/terraform-aurora-sample"] // example
 
   explicit_auth_flows = [
     # 更新トークン(新しいアクセストークンを取得するのに必要。)
@@ -122,8 +122,9 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
   ]
   # 更新トークンの期限
   refresh_token_validity       = 30
-  supported_identity_providers = []
-  user_pool_id                 = aws_cognito_user_pool.user_pool.id
+  supported_identity_providers = ["COGNITO"]
+
+  user_pool_id = aws_cognito_user_pool.user_pool.id
 
   # 属性の書き有無設定。
   write_attributes = [
@@ -163,4 +164,21 @@ resource "aws_cognito_identity_pool" "identity_pool" {
     provider_name           = "cognito-idp.ap-northeast-1.amazonaws.com/${aws_cognito_user_pool.user_pool.id}"
     server_side_token_check = false
   }
+}
+
+resource "aws_cognito_user_pool_domain" "user_pool_domain" {
+  domain       = "user-pool-example-domain-${terraform.workspace}"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+}
+
+output "aws_cognito_user_pool_id" {
+  value = aws_cognito_user_pool.user_pool.id
+}
+
+output "aws_cognito_user_pool_client_id" {
+  value = aws_cognito_user_pool_client.user_pool_client.id
+}
+
+output "aws_cognito_user_pool_domain" {
+  value = aws_cognito_user_pool_domain.user_pool_domain.domain
 }

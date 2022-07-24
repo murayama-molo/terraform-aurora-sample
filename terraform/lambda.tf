@@ -1,4 +1,3 @@
-
 variable "domain_name" {}
 variable "domain_name_certificate_arn" {}
 
@@ -59,5 +58,27 @@ module "lambda_function" {
       service    = "apigateway"
       source_arn = "${module.api_gateway.apigatewayv2_api_execution_arn}/*/*"
     }
+  }
+
+}
+
+module "lambda_at_edge" {
+  source = "terraform-aws-modules/lambda/aws"
+
+  lambda_at_edge = true
+
+  function_name = "cloudfront-cognito-edge-${terraform.workspace}"
+  description   = "My awesome lambda@edge function"
+  handler       = "handler.handler"
+  runtime       = "nodejs16.x"
+
+  source_path = "../back/edge"
+
+  providers = {
+    aws = aws.virginia
+  }
+
+  tags = {
+    Module = "lambda-at-edge"
   }
 }

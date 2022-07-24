@@ -20,3 +20,10 @@ terraform {
     dynamodb_table = "terraform-aurora-sample-state-locking"
   }
 }
+
+data "aws_region" "current" {
+}
+
+output "aws_region" {
+  value = data.aws_region.current.name
+}

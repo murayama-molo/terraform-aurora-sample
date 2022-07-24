@@ -121,12 +121,13 @@ export TERRAFORM_WORKSPACE={TYPE_YOUR_OWN_WORKSPACE_NAME}
 - Terraform のバックエンドに必要なリソースの作成と初期化処理を行う。
 
 ```bash
-./terraform/bin/entrypoint.sh init
+$ ./terraform/bin/entrypoint.sh init
 ```
 
 # plan
 
 ※apply するリソースの確認
+※./terraform/配下で実行
 
 ```bash
 $ terraform plan -var 'profile=default' -var 'domain_name=example.com' -var 'domain_name_certificate_arn=arn:aws:acm:ap-northeast-1:xxxxxxxxxxxx:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
@@ -134,11 +135,28 @@ $ terraform plan -var 'profile=default' -var 'domain_name=example.com' -var 'dom
 
 # apply
 
+※./terraform/配下で実行
+
 ```bash
 $ terraform apply -var 'profile=default' -var 'domain_name=example.com' -var 'domain_name_certificate_arn=arn:aws:acm:ap-northeast-1:xxxxxxxxxxxx:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 ```
 
+# .env の設定
+
+```bash
+$ ./terraform/bin/entrypoint.sh env
+```
+
+## もう一度 apply して.env を反映
+
+```bash
+$ cd terraform
+$ terraform apply -var 'profile=default' -var 'domain_name=example.com' -var 'domain_name_certificate_arn=arn:aws:acm:ap-northeast-1:xxxxxxxxxxxx:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+```
+
 # destroy
+
+※./terraform/配下で実行
 
 お掃除
 作ったリソースを全部削除
